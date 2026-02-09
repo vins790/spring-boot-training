@@ -1,7 +1,8 @@
 package com.vins.spring_boot_training.contollers;
 
-import com.vins.spring_boot_training.service.FibonacciServiceImpl;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.vins.spring_boot_training.exception.FibonacciNotNullException;
+import com.vins.spring_boot_training.service.FibonacciService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,20 +10,20 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/fib")
 public class FibonacciController {
 
-  FibonacciServiceImpl fibonacciService;
+  private FibonacciService fibonacciService;
 
-  @Autowired
-  public FibonacciController(FibonacciServiceImpl fibonacciService) {
+  public FibonacciController(FibonacciService fibonacciService) {
     this.fibonacciService = fibonacciService;
   }
 
+  @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{n}")
-  public ResponseEntity<?> fibonacci(@PathVariable int n) {
+  public ResponseEntity<Integer> fibonacci(@PathVariable int n) {
     try {
       int result = fibonacciService.getFibonacci(n);
       return ResponseEntity.ok(result);
     } catch (IllegalArgumentException ex) {
-      return ResponseEntity.badRequest().body(ex.getMessage());
+      throw new FibonacciNotNullException(ex.getMessage());
     }
   }
 }
