@@ -73,20 +73,3 @@ button:focus, button:focus-visible {
   a:hover { color: #747bff; }
   button { background-color: var(--button-bg-light); }
 }
-
-/* Layout components */
-.card {
-  padding: 2em;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.input-group { display: flex; gap: 0.5em; }
-.input-group input { border-radius: 8px; padding: 0 8px; }
-
-/* Small accessibility tweak for focus on inputs */
-.input-group input:focus {
-  outline: 3px solid rgba(100, 108, 255, 0.25);
-}
