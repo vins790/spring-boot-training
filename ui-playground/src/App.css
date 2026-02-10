@@ -1,0 +1,22 @@
+#root {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 2rem;
+  text-align: center;
+}
+
+.card {
+  padding: 2em;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.input-group { display: flex; gap: 0.5em; }
+
+.input-group input { border-radius: 8px; padding: 0 8px; }
+
+.input-group input:focus {
+  outline: 3px solid rgba(100, 108, 255, 0.25);
+}
