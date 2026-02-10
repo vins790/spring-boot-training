@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/fib")
 public class FibonacciController {
 
-  private FibonacciService fibonacciService;
+  private final FibonacciService fibonacciService;
 
   public FibonacciController(FibonacciService fibonacciService) {
     this.fibonacciService = fibonacciService;
