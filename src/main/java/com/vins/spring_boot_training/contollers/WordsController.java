@@ -1,7 +1,6 @@
 package com.vins.spring_boot_training.contollers;
 
-import com.vins.spring_boot_training.service.abstracts.WordsService;
-import org.springframework.beans.factory.annotation.Qualifier;
+import com.vins.spring_boot_training.service.interfaces.WordsService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -12,7 +11,7 @@ public class WordsController {
 
   private final WordsService service;
 
-  public WordsController(@Qualifier("h2WordsService") WordsService service) {
+  public WordsController(WordsService service) {
     this.service = service;
   }
 

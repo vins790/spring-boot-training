@@ -1,11 +1,11 @@
-package com.vins.spring_boot_training.service.abstracts;
+package com.vins.spring_boot_training.service.interfaces;
 
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-public abstract class WordsService {
-  protected Set<String> extractWords(String sentence) {
+public interface WordsService {
+  default Set<String> extractWords(String sentence) {
     if (sentence == null || sentence.isEmpty()) {
       return java.util.Collections.emptySet();
     }
@@ -16,7 +16,8 @@ public abstract class WordsService {
         .collect(Collectors.toSet());
   }
 
-  abstract public void saveWords(String sentence);
-  abstract public Set<String> getWords();
+  void saveWords(String sentence);
+
+  Set<String> getWords();
 
 }

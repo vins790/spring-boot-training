@@ -2,17 +2,19 @@ package com.vins.spring_boot_training.service;
 
 import com.vins.spring_boot_training.entity.Word;
 import com.vins.spring_boot_training.repository.WordsRepository;
-import com.vins.spring_boot_training.service.abstracts.WordsService;
+import com.vins.spring_boot_training.service.interfaces.WordsService;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
-public class H2WordsService extends WordsService {
+@Profile({"mysql", "h2"})
+public class PersistentWordsService implements WordsService {
   private final WordsRepository repository;
 
-  public H2WordsService(WordsRepository repository) {
+  public PersistentWordsService(WordsRepository repository) {
     this.repository = repository;
   }
 

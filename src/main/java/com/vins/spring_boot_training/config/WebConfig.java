@@ -10,16 +10,17 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-  @Value("${frontend.url}")
-  private String frontendUrl;
+  Properties properties;
 
-  @Value("${frontend.port}")
-  private int frontendPort;
+  public WebConfig(Properties properties) {
+    super();
+    this.properties = properties;
 
+  }
   @Override
   public void addCorsMappings(CorsRegistry registry) {
     registry.addMapping("/**")
-        .allowedOrigins(String.format("%s:%d", frontendUrl, frontendPort))
+        .allowedOrigins(String.format("%s:%d", properties.getFrontendUrl(), properties.getFrontendPort()))
         .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
         .allowCredentials(true);
   }
