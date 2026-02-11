@@ -10,7 +10,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 
-  Properties properties;
+  private final Properties properties;
 
   public WebConfig(Properties properties) {
     super();

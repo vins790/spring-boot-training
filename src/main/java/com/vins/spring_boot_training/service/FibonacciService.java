@@ -1,12 +1,13 @@
 package com.vins.spring_boot_training.service;
 
+import com.vins.spring_boot_training.exception.FibonacciNotNullException;
 import org.springframework.stereotype.Component;
 
 @Component
 public class FibonacciService {
   public int getFibonacci(int n) {
     if (n < 0) {
-      throw new IllegalArgumentException("n must be non-negative");
+      throw new FibonacciNotNullException("n must be non-negative");
     }
 
     if (n <= 1) return n;

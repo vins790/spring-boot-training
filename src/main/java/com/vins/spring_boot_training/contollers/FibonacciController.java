@@ -6,6 +6,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import static org.springframework.http.ResponseEntity.ok;
+
 @RestController
 @RequestMapping("/api/fib")
 public class FibonacciController {
@@ -19,11 +21,7 @@ public class FibonacciController {
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{n}")
   public ResponseEntity<Integer> fibonacci(@PathVariable int n) {
-    try {
       int result = fibonacciService.getFibonacci(n);
-      return ResponseEntity.ok(result);
-    } catch (IllegalArgumentException ex) {
-      throw new FibonacciNotNullException(ex.getMessage());
-    }
+      return ok(result);
   }
 }
