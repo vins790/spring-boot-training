@@ -1,6 +1,5 @@
 package com.vins.spring_boot_training.contollers;
 
-import com.vins.spring_boot_training.exception.FibonacciNotNullException;
 import com.vins.spring_boot_training.service.FibonacciService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
