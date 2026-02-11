@@ -1,12 +1,12 @@
 package com.vins.spring_boot_training.service;
 
 import com.vins.spring_boot_training.service.abstracts.WordsService;
-import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
 
-@Component
+@Service
 public class InMemoryWordsService extends WordsService {
 
   private final Set<String> words;
