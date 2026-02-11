@@ -4,10 +4,12 @@ import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptySet;
+
 public interface WordsService {
   default Set<String> extractWords(String sentence) {
     if (sentence == null || sentence.isEmpty()) {
-      return java.util.Collections.emptySet();
+      return emptySet();
     }
 
     return Arrays.stream(sentence.split("[^a-zA-Z]+"))
