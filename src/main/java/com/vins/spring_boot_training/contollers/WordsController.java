@@ -22,6 +22,6 @@ public class WordsController {
 
   @PostMapping
   public void addWord(@RequestBody String sentence) {
-    service.saveWords(sentence);
+    service.saveWords(sentence, 123L);
   }
 }
