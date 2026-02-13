@@ -6,6 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
+//TODO: zobacz jak Michał zrbił to z enumem
 @RestControllerAdvice
 public class CustomExceptionHandler implements FibonacciExceptionHandler, UsersExceptionHandler {
   @ExceptionHandler

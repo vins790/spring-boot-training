@@ -18,6 +18,8 @@ public class PersistentWordsService implements WordsService {
 
   public PersistentWordsService(WordsRepository repository, EntityManager entityManager) {
     this.repository = repository;
+
+    //TODO: zastąpić user repository
     this.entityManager = entityManager;
   }
 

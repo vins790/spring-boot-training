@@ -27,7 +27,7 @@ public class JwtService {
     return extractClaim(token, Claims::getSubject);
   }
 
-  public boolean isTokenValid(String token, User userDetails) {
+  public boolean isTokenValid(String token, UserDetails userDetails) {
     final String username = extractUsername(token);
     isTokenExpired(token);
     return username.equals(userDetails.getUsername()) && !isTokenExpired(token);

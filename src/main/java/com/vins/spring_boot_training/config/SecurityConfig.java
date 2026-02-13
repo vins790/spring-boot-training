@@ -49,11 +49,11 @@ public class SecurityConfig {
   }
 
   @Bean
-  public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) throws Exception {
+  public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) {
     http.authorizeHttpRequests(configurer ->
         configurer
-            .requestMatchers("/api/auth/**").permitAll()
-            .requestMatchers("/docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**", "/webjars/**",
+            .requestMatchers("/api/auth/**", "/docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
+                "/webjars/**",
                 "/swagger-resources/**").permitAll()
             .anyRequest().authenticated()
     );
