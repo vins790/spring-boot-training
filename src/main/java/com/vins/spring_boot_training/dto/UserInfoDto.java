@@ -12,5 +12,5 @@ import java.util.Set;
 @AllArgsConstructor
 public class UserInfoDto {
   private String username;
-  private Set<Word> words;
+  private Set<String> words;
 }

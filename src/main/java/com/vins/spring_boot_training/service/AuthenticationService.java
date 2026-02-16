@@ -2,8 +2,8 @@ package com.vins.spring_boot_training.service;
 
 import com.vins.spring_boot_training.dto.UserCredentialsDto;
 import com.vins.spring_boot_training.entity.User;
-import com.vins.spring_boot_training.exception.UserAlreadyExistsException;
-import com.vins.spring_boot_training.exception.UserInvalidUsernameException;
+import com.vins.spring_boot_training.exception.CustomException;
+import com.vins.spring_boot_training.exception.errors.UserErrors;
 import com.vins.spring_boot_training.repository.UsersRepository;
 import com.vins.spring_boot_training.dto.TokenDto;
 import lombok.AllArgsConstructor;
@@ -27,7 +27,7 @@ public class AuthenticationService {
   @Transactional
   public void registerUser(UserCredentialsDto userDto) {
     if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
-      throw new UserAlreadyExistsException("User with username " + userDto.getUsername() + " already exists");
+      throw new CustomException(UserErrors.USER_ALREADY_EXISTS);
     }
 
     String encodedPassword = passwordEncoder.encode(userDto.getPassword());
@@ -36,12 +36,12 @@ public class AuthenticationService {
   }
 
   @Transactional
-  public TokenDto login(UserCredentialsDto credentials) throws UserInvalidUsernameException {
+  public TokenDto login(UserCredentialsDto credentials) throws CustomException {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
     );
     User user = userRepository.findByUsername(credentials.getUsername())
-        .orElseThrow(() -> new UserInvalidUsernameException("User with username " + credentials.getUsername() + " not found"));
+        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME));
 
     String jwtToken = jwtService.generateToken(new HashMap<>(), user);
 

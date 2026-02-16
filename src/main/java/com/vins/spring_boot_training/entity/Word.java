@@ -28,16 +28,9 @@ public class Word {
   @Column(name = "created_at", nullable = false, updatable = false)
   private Instant createdAt;
 
-  @ManyToOne(fetch = FetchType.LAZY)
-  @JoinTable(
-      name = "user_words",
-      joinColumns = @JoinColumn(name = "word_id"),
-      inverseJoinColumns = @JoinColumn(name = "user_id")
-  )
-  private User user;
 
-  public Word(String word, User user) {
+  public Word(String word) {
     this.word = word;
-    this.user = user;
+    this.createdAt = Instant.now();
   }
 }

@@ -1,6 +1,8 @@
 package com.vins.spring_boot_training.contollers;
 
-import com.vins.spring_boot_training.service.interfaces.WordsService;
+import com.vins.spring_boot_training.entity.User;
+import com.vins.spring_boot_training.service.WordsService;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
@@ -15,13 +17,19 @@ public class WordsController {
     this.service = service;
   }
 
-  @GetMapping()
+  @GetMapping("/all")
   public Set<String> getWords() {
     return service.getWords();
   }
 
+  @GetMapping()
+  public Set<String> getWords(@AuthenticationPrincipal User user) {
+    return service.getWords(user.getId());
+  }
+
+
   @PostMapping
-  public void addWord(@RequestBody String sentence) {
-    service.saveWords(sentence, 123L);
+  public void addWord(@RequestBody String sentence, @AuthenticationPrincipal User user) {
+    service.saveWords(sentence, user.getId());
   }
 }

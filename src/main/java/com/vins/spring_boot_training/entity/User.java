@@ -30,7 +30,12 @@ public class User implements UserDetails {
   @Column(nullable = false)
   String password;
 
-  @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+  @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true )
+  @JoinTable(
+      name = "user_words",
+      joinColumns = @JoinColumn(name = "user_id"),
+      inverseJoinColumns = @JoinColumn(name = "word_id")
+  )
   private Set<Word> words = new HashSet<>();
 
   public User(String username, String password) {
