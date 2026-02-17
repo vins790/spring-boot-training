@@ -5,35 +5,35 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
 @Entity
-@Table(name = "words")
+@Table(name = "sentences")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class Word {
+public class Sentence {
+
   @Id
   @GeneratedValue(strategy = GenerationType.IDENTITY)
-  @Column(name="word_id", nullable = false)
-  private long id;
+  @Column(name = "sentence_id")
+  private long sentenceId;
 
-  @Column(unique = true, nullable = false)
-  private String word;
+  @Column(nullable = false)
+  private String sentence;
 
   @ManyToOne(fetch = FetchType.LAZY)
-  @JoinColumn(name = "sentence_id", nullable = false)
-  private Sentence sentence;
+  @JoinColumn(name = "user_id", nullable = false)
+  private User user;
 
-  @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)
   private Instant createdAt;
 
-  public Word(String word, Sentence sentence) {
-    this.word = word;
+  public Sentence(String sentence, User user) {
     this.sentence = sentence;
+    this.user = user;
+    this.createdAt = Instant.now();
   }
 }
