@@ -9,6 +9,7 @@ import com.vins.spring_boot_training.dto.TokenDto;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,11 +21,11 @@ import java.util.HashMap;
 public class AuthenticationService {
 
   private final UsersRepository userRepository;
+  private final UserService userService;
   private final AuthenticationManager authenticationManager;
   private final JwtService jwtService;
   private final PasswordEncoder passwordEncoder;
 
-  @Transactional
   public void registerUser(UserCredentialsDto userDto) {
     if (userRepository.findByUsername(userDto.getUsername()).isPresent()) {
       throw new CustomException(UserErrors.USER_ALREADY_EXISTS);
@@ -35,14 +36,11 @@ public class AuthenticationService {
     userRepository.save(newUser);
   }
 
-  @Transactional
   public TokenDto login(UserCredentialsDto credentials) throws CustomException {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
     );
-    User user = userRepository.findByUsername(credentials.getUsername())
-        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME));
-
+    UserDetails user = userService.loadUserByUsername(credentials.getUsername());
     String jwtToken = jwtService.generateToken(new HashMap<>(), user);
 
     return new TokenDto(jwtToken);

@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -21,9 +22,11 @@ public class UserService implements UserDetailsService {
   private final UsersRepository userRepository;
 
   @Override
-  public User loadUserByUsername(String username) throws CustomException {
-    return userRepository.findByUsername(username)
-        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME));
+  public UserDetails loadUserByUsername(String username) throws CustomException {
+    return userRepository
+        .findByUsername(username)
+        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME))
+        .toUserDetails();
   }
 
   @Transactional(readOnly = true)
@@ -40,5 +43,12 @@ public class UserService implements UserDetailsService {
             .stream()
             .map(Word::getWord)
             .collect(java.util.stream.Collectors.toSet()));
+  }
+
+  public Long getIdByUserDetails(UserDetails userDetails) throws CustomException {
+    return userRepository
+        .findByUsername(userDetails.getUsername())
+        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME))
+        .getId();
   }
 }

@@ -1,11 +1,11 @@
 package com.vins.spring_boot_training.entity;
 
 import jakarta.persistence.*;
-import jdk.jfr.Timestamp;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
 
@@ -28,14 +28,12 @@ public class Word {
   @JoinColumn(name = "sentence_id", nullable = false)
   private Sentence sentence;
 
-  @Timestamp
+  @CreationTimestamp
   @Column(name = "created_at", nullable = false, updatable = false)
   private Instant createdAt;
-
 
   public Word(String word, Sentence sentence) {
     this.word = word;
     this.sentence = sentence;
-    this.createdAt = Instant.now();
   }
 }
