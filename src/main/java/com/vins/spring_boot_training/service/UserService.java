@@ -14,6 +14,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -54,9 +56,12 @@ public class UserService implements UserDetailsService {
         .getId();
   }
 
+  public Set<User> getAllUsers() {
+    return new HashSet<>(userRepository.findAll());
+  }
+
   public Set<Long> getAllUsersIds() {
-    return userRepository
-        .findAll()
+    return getAllUsers()
         .stream()
         .map(User::getId)
         .collect(Collectors.toSet());

@@ -33,7 +33,6 @@ public class WordsController {
     );
   }
 
-
   @PostMapping
   public void addWord(@RequestBody String sentence, @AuthenticationPrincipal UserDetails user)
       throws CustomException {
