@@ -15,6 +15,10 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 @AllArgsConstructor
 @Service
 public class UserService implements UserDetailsService {
@@ -50,5 +54,16 @@ public class UserService implements UserDetailsService {
         .findByUsername(userDetails.getUsername())
         .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME))
         .getId();
+  }
+
+  public Set<User> getAllUsers() {
+    return new HashSet<>(userRepository.findAll());
+  }
+
+  public Set<Long> getAllUsersIds() {
+    return getAllUsers()
+        .stream()
+        .map(User::getId)
+        .collect(Collectors.toSet());
   }
 }

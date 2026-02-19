@@ -1,6 +1,6 @@
 package com.vins.spring_boot_training.config;
 
-import com.vins.spring_boot_training.service.JwtService;
+import com.vins.spring_boot_training.service.security.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

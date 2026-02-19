@@ -1,7 +1,6 @@
-package com.vins.spring_boot_training.service;
+package com.vins.spring_boot_training.service.security;
 
 import com.vins.spring_boot_training.config.SecurityConfig;
-import com.vins.spring_boot_training.entity.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;

@@ -1,0 +1,13 @@
+services:
+  word-frequency-service:
+    build:
+      context: ./word-frequency-service
+      dockerfile: Dockerfile
+    ports:
+      - "8001:8000"
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge

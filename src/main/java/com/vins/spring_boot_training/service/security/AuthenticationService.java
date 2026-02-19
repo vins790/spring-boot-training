@@ -1,4 +1,4 @@
-package com.vins.spring_boot_training.service;
+package com.vins.spring_boot_training.service.security;
 
 import com.vins.spring_boot_training.dto.UserCredentialsDto;
 import com.vins.spring_boot_training.entity.User;
@@ -6,13 +6,13 @@ import com.vins.spring_boot_training.exception.CustomException;
 import com.vins.spring_boot_training.exception.errors.UserErrors;
 import com.vins.spring_boot_training.repository.UsersRepository;
 import com.vins.spring_boot_training.dto.TokenDto;
+import com.vins.spring_boot_training.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.HashMap;
 

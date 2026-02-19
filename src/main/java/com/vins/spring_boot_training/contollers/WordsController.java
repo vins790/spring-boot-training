@@ -26,13 +26,12 @@ public class WordsController {
     return wordsService.getWords();
   }
 
-  @GetMapping()
+  @GetMapping
   public Set<String> getWords(@AuthenticationPrincipal UserDetails user) {
     return wordsService.getWords(
         userService.getIdByUserDetails(user)
     );
   }
-
 
   @PostMapping
   public void addWord(@RequestBody String sentence, @AuthenticationPrincipal UserDetails user)

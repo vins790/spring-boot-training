@@ -2,7 +2,7 @@ package com.vins.spring_boot_training.contollers;
 
 import com.vins.spring_boot_training.dto.UserCredentialsDto;
 import com.vins.spring_boot_training.dto.TokenDto;
-import com.vins.spring_boot_training.service.AuthenticationService;
+import com.vins.spring_boot_training.service.security.AuthenticationService;
 import io.swagger.v3.oas.annotations.Operation;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
