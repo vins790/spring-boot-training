@@ -1,18 +1,20 @@
 package com.vins.spring_boot_training.service;
 
+import com.vins.spring_boot_training.config.Properties;
 import com.vins.spring_boot_training.dto.ScoreDto;
 import com.vins.spring_boot_training.entity.Score;
 import com.vins.spring_boot_training.entity.User;
 import com.vins.spring_boot_training.repository.ScoreRepository;
-import com.vins.spring_boot_training.repository.UsersRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 @Service
 @AllArgsConstructor
@@ -20,7 +22,35 @@ public class ScoreService {
   private final ScoreRepository scoreRepository;
   private final WordsService wordsService;
   private final UserService userService;
-  private final UsersRepository usersRepository;
+  private final WordFrequencyService wordFrequencyService;
+  private final FibonacciService fibonacciService;
+  private final Properties properties;
+
+  private Long calculateWordScore(String word) {
+    Long fibonacci = fibonacciService.getFibonacci(word.length());
+    Long frequencyModifier = calculateFrequencyModifier(wordFrequencyService
+        .getWordFrequency(word, properties.getWordLanguage())
+        .getFrequency());
+
+    return frequencyModifier * fibonacci;
+  }
+
+  private Long calculateFrequencyModifier(Double frequency) {
+    if (frequency == null || frequency == 0.0 || !Double.isFinite(frequency)) return 0L;
+
+    String formatted = String.format(Locale.US, "%.10f", frequency);
+    String[] parts = formatted.split("\\.");
+
+    if (parts.length < 2) return 0L;
+
+    final String decimalPart = parts[1].length() < 10
+        ? String.format("%-10s", parts[1]).replace(' ', '0')
+        : parts[1];
+
+    return IntStream.range(0, 10)
+        .mapToLong(i -> (long) Character.getNumericValue(decimalPart.charAt(i)) * (10 - i))
+        .sum();
+  }
 
   public long calculateUserScore(long userId) {
     AtomicInteger bonus10 = new AtomicInteger(1);
@@ -28,18 +58,19 @@ public class ScoreService {
     return wordsService
         .getWords(userId)
         .stream()
-        .map(String::length)
-        .reduce(0, (score, length) -> {
-          if (length > 10 & bonus10.get() > 0) {
+        .mapToLong(word -> {
+          long wordBaseScore = calculateWordScore(word);
+          if (wordBaseScore == 0) return 0L;
+          if (word.length() > 10 && bonus10.get() > 0) {
             bonus10.getAndDecrement();
-            return score + 3;
-          };
-          if (length > 5 & bonus5.get() > 0) {
-            bonus5.getAndDecrement();
-            return score + 2;
+            return wordBaseScore * 3L;
           }
-          return score + 1;
-        });
+          if (word.length() > 5 && bonus5.get() > 0) {
+            bonus5.getAndDecrement();
+            return wordBaseScore * 2L;
+          }
+          return wordBaseScore;
+        }).sum();
   }
 
   @Scheduled(cron = "0 * * * * *")
@@ -77,7 +108,7 @@ public class ScoreService {
     });
   }
 
-  private void updateChangedScore (Score score) {
+  private void updateChangedScore(Score score) {
     long newScore = calculateUserScore(score.getUserId());
     if (!score.getScore().equals(newScore)) {
       score.setScore(newScore);

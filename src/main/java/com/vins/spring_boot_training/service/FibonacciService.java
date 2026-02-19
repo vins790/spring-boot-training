@@ -6,12 +6,12 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class FibonacciService {
-  public int getFibonacci(int n) {
+  public Long getFibonacci(int n) {
     if (n < 0) {
       throw new CustomException(FibonacciErrors.NEGATIVE_NUMBER);
     }
 
-    if (n <= 1) return n;
+    if (n <= 1) return (long) n;
 
     int a = 0;
     int b = 1;
@@ -20,6 +20,6 @@ public class FibonacciService {
       a = b;
       b = next;
     }
-    return b;
+    return (long) b;
   }
 }

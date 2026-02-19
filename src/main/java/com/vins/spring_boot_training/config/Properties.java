@@ -13,4 +13,12 @@ public class Properties {
 
   @Value("${frontend.port}")
   private int frontendPort;
+
+  @Value("${word.frequency.service.url:http://localhost:8001}")
+  private String wordFrequencyServiceUrl;
+
+  @Value("${word.lang:pl}")
+  private String wordLanguage;
+
+
 }

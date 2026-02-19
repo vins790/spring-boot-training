@@ -3,11 +3,11 @@ package com.vins.spring_boot_training.contollers;
 import com.vins.spring_boot_training.dto.ScoreDto;
 import com.vins.spring_boot_training.service.ScoreService;
 import com.vins.spring_boot_training.service.UserService;
+import com.vins.spring_boot_training.service.WordFrequencyService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-
 import java.util.List;
 
 @AllArgsConstructor
