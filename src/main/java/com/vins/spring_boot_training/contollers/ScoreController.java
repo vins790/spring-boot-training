@@ -3,7 +3,6 @@ package com.vins.spring_boot_training.contollers;
 import com.vins.spring_boot_training.dto.ScoreDto;
 import com.vins.spring_boot_training.service.ScoreService;
 import com.vins.spring_boot_training.service.UserService;
-import com.vins.spring_boot_training.service.WordFrequencyService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,7 +17,7 @@ public class ScoreController {
   private ScoreService scoreService;
   private UserService userService;
 
-  @GetMapping()
+  @GetMapping
   public Long getScore(@AuthenticationPrincipal UserDetails user) {
     return scoreService.getUserScore(userService.getIdByUserDetails(user));
   }
@@ -35,7 +34,7 @@ public class ScoreController {
 
   @PostMapping("/recalculateScores")
   public void recalculateScores() {
-    scoreService.scheduledScoreCalculation();
+    scoreService.scoreCalculation();
   }
 
   @GetMapping("/calculate/{userId}")

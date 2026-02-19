@@ -19,8 +19,7 @@ public class FibonacciController {
 
   @ResponseStatus(HttpStatus.OK)
   @GetMapping("/{n}")
-  public ResponseEntity<Long> fibonacci(@PathVariable int n) {
-      Long result = fibonacciService.getFibonacci(n);
-      return ok(result);
+  public Long fibonacci(@PathVariable long n) {
+    return fibonacciService.getFibonacci(n);
   }
 }

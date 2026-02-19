@@ -26,7 +26,7 @@ public class WordsController {
     return wordsService.getWords();
   }
 
-  @GetMapping()
+  @GetMapping
   public Set<String> getWords(@AuthenticationPrincipal UserDetails user) {
     return wordsService.getWords(
         userService.getIdByUserDetails(user)

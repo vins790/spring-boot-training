@@ -1,7 +1,6 @@
 package com.vins.spring_boot_training.service;
 
 import com.vins.spring_boot_training.config.Properties;
-import com.vins.spring_boot_training.dto.WordFrequencyDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -11,7 +10,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.lang.reflect.Method;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -38,94 +36,103 @@ class ScoreServiceTest {
   @InjectMocks
   private ScoreService scoreService;
 
+  // For testing WordFrequencyService directly
+  private WordFrequencyService realWordFrequencyService;
+
   @Nested
   @DisplayName("calculateFrequencyModifier Tests")
   class CalculateFrequencyModifierTests {
 
+    @BeforeEach
+    void setUp() {
+      // Create real instance for testing calculateFrequencyModifier
+      realWordFrequencyService = new WordFrequencyService(properties, null);
+    }
+
     @Test
     @DisplayName("Should return 0 for null frequency")
-    void shouldReturn0ForNullFrequency() throws Exception {
-      Long result = invokeCalculateFrequencyModifier(null);
+    void shouldReturn0ForNullFrequency() {
+      Long result = realWordFrequencyService.calculateFrequencyModifier(null);
       assertEquals(0L, result);
     }
 
     @Test
-    @DisplayName("Should return 0 for zero frequency")
-    void shouldReturn0ForZeroFrequency() throws Exception {
-      Long result = invokeCalculateFrequencyModifier(0.0);
+    @DisplayName("Should return 0 for frequency 0")
+    void shouldReturn0ForFrequency0() {
+      Long result = realWordFrequencyService.calculateFrequencyModifier(0.0);
       assertEquals(0L, result);
     }
 
     @Test
     @DisplayName("Should return 0 for NaN")
-    void shouldReturn0ForNaN() throws Exception {
-      Long result = invokeCalculateFrequencyModifier(Double.NaN);
+    void shouldReturn0ForNaN() {
+      Long result = realWordFrequencyService.calculateFrequencyModifier(Double.NaN);
       assertEquals(0L, result);
     }
 
     @Test
     @DisplayName("Should return 0 for positive infinity")
-    void shouldReturn0ForPositiveInfinity() throws Exception {
-      Long result = invokeCalculateFrequencyModifier(Double.POSITIVE_INFINITY);
+    void shouldReturn0ForPositiveInfinity() {
+      Long result = realWordFrequencyService.calculateFrequencyModifier(Double.POSITIVE_INFINITY);
       assertEquals(0L, result);
     }
 
     @Test
     @DisplayName("Should return 0 for negative infinity")
-    void shouldReturn0ForNegativeInfinity() throws Exception {
-      Long result = invokeCalculateFrequencyModifier(Double.NEGATIVE_INFINITY);
+    void shouldReturn0ForNegativeInfinity() {
+      Long result = realWordFrequencyService.calculateFrequencyModifier(Double.NEGATIVE_INFINITY);
       assertEquals(0L, result);
     }
 
     @Test
     @DisplayName("Should calculate modifier for frequency 0.1")
-    void shouldCalculateModifierForFrequency01() throws Exception {
+    void shouldCalculateModifierForFrequency01() {
       // frequency = 0.1000000000
       // 1st decimal: 1 * 10 = 10
       // 2nd-10th decimals: 0 * weight = 0
       // Expected: 10
-      Long result = invokeCalculateFrequencyModifier(0.1);
+      Long result = realWordFrequencyService.calculateFrequencyModifier(0.1);
       assertEquals(10L, result);
     }
 
     @Test
     @DisplayName("Should calculate modifier for frequency 0.123456")
-    void shouldCalculateModifierForFrequency0123456() throws Exception {
+    void shouldCalculateModifierForFrequency0123456() {
       // frequency = 0.1234560000
       // 1st: 1*10=10, 2nd: 2*9=18, 3rd: 3*8=24, 4th: 4*7=28, 5th: 5*6=30, 6th: 6*5=30
       // Expected: 10+18+24+28+30+30 = 140
-      Long result = invokeCalculateFrequencyModifier(0.123456);
+      Long result = realWordFrequencyService.calculateFrequencyModifier(0.123456);
       assertEquals(140L, result);
     }
 
     @Test
     @DisplayName("Should calculate modifier for frequency 0.9999999999")
-    void shouldCalculateModifierForFrequency09999999999() throws Exception {
+    void shouldCalculateModifierForFrequency09999999999() {
       // frequency = 0.9999999999
       // 1st: 9*10=90, 2nd: 9*9=81, 3rd: 9*8=72, 4th: 9*7=63, 5th: 9*6=54
       // 6th: 9*5=45, 7th: 9*4=36, 8th: 9*3=27, 9th: 9*2=18, 10th: 9*1=9
       // Expected: 90+81+72+63+54+45+36+27+18+9 = 495
-      Long result = invokeCalculateFrequencyModifier(0.9999999999);
+      Long result = realWordFrequencyService.calculateFrequencyModifier(0.9999999999);
       assertEquals(495L, result);
     }
 
     @Test
     @DisplayName("Should calculate modifier for very small frequency")
-    void shouldCalculateModifierForVerySmallFrequency() throws Exception {
+    void shouldCalculateModifierForVerySmallFrequency() {
       // frequency = 0.0000000001
       // Only 10th decimal is non-zero: 1 * 1 = 1
-      Long result = invokeCalculateFrequencyModifier(0.0000000001);
+      Long result = realWordFrequencyService.calculateFrequencyModifier(0.0000000001);
       assertEquals(1L, result);
     }
 
     @Test
     @DisplayName("Should calculate modifier for frequency 0.0123456789")
-    void shouldCalculateModifierForFrequency00123456789() throws Exception {
+    void shouldCalculateModifierForFrequency00123456789() {
       // frequency = 0.0123456789
       // 1st: 0*10=0, 2nd: 1*9=9, 3rd: 2*8=16, 4th: 3*7=21, 5th: 4*6=24
       // 6th: 5*5=25, 7th: 6*4=24, 8th: 7*3=21, 9th: 8*2=16, 10th: 9*1=9
       // Expected: 0+9+16+21+24+25+24+21+16+9 = 165
-      Long result = invokeCalculateFrequencyModifier(0.0123456789);
+      Long result = realWordFrequencyService.calculateFrequencyModifier(0.0123456789);
       assertEquals(165L, result);
     }
   }
@@ -141,13 +148,13 @@ class ScoreServiceTest {
 
     @Test
     @DisplayName("Should calculate word score with valid frequency")
-    void shouldCalculateWordScoreWithValidFrequency() throws Exception {
+    void shouldCalculateWordScoreWithValidFrequency() {
       String word = "test";
-      when(wordFrequencyService.getWordFrequency("test", "pl"))
-          .thenReturn(new WordFrequencyDto("test", "pl", 0.123456));
+      when(wordFrequencyService.getWordFrequencyModifier("test", "pl"))
+          .thenReturn(140L);
       when(fibonacciService.getFibonacci(4)).thenReturn(3L);
 
-      Long result = invokeCalculateWordScore(word);
+      Long result = scoreService.calculateWordScore(word);
 
       // frequencyModifier for 0.123456 = 140
       // fibonacci for length 4 = 3
@@ -157,26 +164,26 @@ class ScoreServiceTest {
 
     @Test
     @DisplayName("Should return 0 for word with zero frequency")
-    void shouldReturn0ForWordWithZeroFrequency() throws Exception {
+    void shouldReturn0ForWordWithZeroFrequency() {
       String word = "rare";
-      when(wordFrequencyService.getWordFrequency("rare", "pl"))
-          .thenReturn(new WordFrequencyDto("rare", "pl", 0.0));
+      when(wordFrequencyService.getWordFrequencyModifier("rare", "pl"))
+          .thenReturn(0L);
       when(fibonacciService.getFibonacci(4)).thenReturn(3L);
 
-      Long result = invokeCalculateWordScore(word);
+      Long result = scoreService.calculateWordScore(word);
 
       assertEquals(0L, result);
     }
 
     @Test
     @DisplayName("Should calculate word score with high frequency")
-    void shouldCalculateWordScoreWithHighFrequency() throws Exception {
+    void shouldCalculateWordScoreWithHighFrequency() {
       String word = "a";
-      when(wordFrequencyService.getWordFrequency("a", "pl"))
-          .thenReturn(new WordFrequencyDto("a", "pl", 0.9));
+      when(wordFrequencyService.getWordFrequencyModifier("a", "pl"))
+          .thenReturn(90L);
       when(fibonacciService.getFibonacci(1)).thenReturn(1L);
 
-      Long result = invokeCalculateWordScore(word);
+      Long result = scoreService.calculateWordScore(word);
 
       // frequencyModifier for 0.9 = 9*10 = 90
       // fibonacci for length 1 = 1
@@ -186,13 +193,13 @@ class ScoreServiceTest {
 
     @Test
     @DisplayName("Should handle long word with low frequency")
-    void shouldHandleLongWordWithLowFrequency() throws Exception {
+    void shouldHandleLongWordWithLowFrequency() {
       String word = "extraordinary";
-      when(wordFrequencyService.getWordFrequency("extraordinary", "pl"))
-          .thenReturn(new WordFrequencyDto("extraordinary", "pl", 0.0001));
+      when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
+          .thenReturn(7L);
       when(fibonacciService.getFibonacci(13)).thenReturn(233L);
 
-      Long result = invokeCalculateWordScore(word);
+      Long result = scoreService.calculateWordScore(word);
 
       // frequencyModifier for 0.0001 = 1*7 = 7
       // fibonacci for length 13 = 233
@@ -226,8 +233,8 @@ class ScoreServiceTest {
     void shouldCalculateScoreForUserWithOneWord() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("test"));
-      when(wordFrequencyService.getWordFrequency("test", "pl"))
-          .thenReturn(new WordFrequencyDto("test", "pl", 0.1));
+      when(wordFrequencyService.getWordFrequencyModifier("test", "pl"))
+          .thenReturn(10L);
       when(fibonacciService.getFibonacci(4)).thenReturn(3L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -244,8 +251,8 @@ class ScoreServiceTest {
     void shouldApplyBonusForWordLengthGreaterThan5() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("longer"));
-      when(wordFrequencyService.getWordFrequency("longer", "pl"))
-          .thenReturn(new WordFrequencyDto("longer", "pl", 0.1));
+      when(wordFrequencyService.getWordFrequencyModifier("longer", "pl"))
+          .thenReturn(10L);
       when(fibonacciService.getFibonacci(6)).thenReturn(8L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -262,8 +269,8 @@ class ScoreServiceTest {
     void shouldApplyBonusForWordLengthGreaterThan10() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("extraordinary"));
-      when(wordFrequencyService.getWordFrequency("extraordinary", "pl"))
-          .thenReturn(new WordFrequencyDto("extraordinary", "pl", 0.1));
+      when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
+          .thenReturn(10L);
       when(fibonacciService.getFibonacci(13)).thenReturn(233L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -282,10 +289,10 @@ class ScoreServiceTest {
       when(wordsService.getWords(userId)).thenReturn(
           Set.of("extraordinary", "unbelievable")
       );
-      when(wordFrequencyService.getWordFrequency("extraordinary", "pl"))
-          .thenReturn(new WordFrequencyDto("extraordinary", "pl", 0.1));
-      when(wordFrequencyService.getWordFrequency("unbelievable", "pl"))
-          .thenReturn(new WordFrequencyDto("unbelievable", "pl", 0.1));
+      when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
+          .thenReturn(10L);
+      when(wordFrequencyService.getWordFrequencyModifier("unbelievable", "pl"))
+          .thenReturn(10L);
       when(fibonacciService.getFibonacci(13)).thenReturn(233L);
       when(fibonacciService.getFibonacci(12)).thenReturn(144L);
 
@@ -312,10 +319,10 @@ class ScoreServiceTest {
       when(wordsService.getWords(userId)).thenReturn(
           Set.of("longer", "second")
       );
-      when(wordFrequencyService.getWordFrequency("longer", "pl"))
-          .thenReturn(new WordFrequencyDto("longer", "pl", 0.1));
-      when(wordFrequencyService.getWordFrequency("second", "pl"))
-          .thenReturn(new WordFrequencyDto("second", "pl", 0.1));
+      when(wordFrequencyService.getWordFrequencyModifier("longer", "pl"))
+          .thenReturn(10L);
+      when(wordFrequencyService.getWordFrequencyModifier("second", "pl"))
+          .thenReturn(10L);
       when(fibonacciService.getFibonacci(6)).thenReturn(8L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -333,10 +340,10 @@ class ScoreServiceTest {
       when(wordsService.getWords(userId)).thenReturn(
           Set.of("valid", "zero")
       );
-      when(wordFrequencyService.getWordFrequency("valid", "pl"))
-          .thenReturn(new WordFrequencyDto("valid", "pl", 0.1));
-      when(wordFrequencyService.getWordFrequency("zero", "pl"))
-          .thenReturn(new WordFrequencyDto("zero", "pl", 0.0));
+      when(wordFrequencyService.getWordFrequencyModifier("valid", "pl"))
+          .thenReturn(10L);
+      when(wordFrequencyService.getWordFrequencyModifier("zero", "pl"))
+          .thenReturn(0L);
       when(fibonacciService.getFibonacci(5)).thenReturn(5L);
       when(fibonacciService.getFibonacci(4)).thenReturn(3L);
 
@@ -355,14 +362,14 @@ class ScoreServiceTest {
       when(wordsService.getWords(userId)).thenReturn(
           new HashSet<>(Arrays.asList("extraordinary", "longer", "test", "a"))
       );
-      when(wordFrequencyService.getWordFrequency("extraordinary", "pl"))
-          .thenReturn(new WordFrequencyDto("extraordinary", "pl", 0.123));
-      when(wordFrequencyService.getWordFrequency("longer", "pl"))
-          .thenReturn(new WordFrequencyDto("longer", "pl", 0.2));
-      when(wordFrequencyService.getWordFrequency("test", "pl"))
-          .thenReturn(new WordFrequencyDto("test", "pl", 0.05));
-      when(wordFrequencyService.getWordFrequency("a", "pl"))
-          .thenReturn(new WordFrequencyDto("a", "pl", 0.9));
+      when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
+          .thenReturn(52L);
+      when(wordFrequencyService.getWordFrequencyModifier("longer", "pl"))
+          .thenReturn(20L);
+      when(wordFrequencyService.getWordFrequencyModifier("test", "pl"))
+          .thenReturn(45L);
+      when(wordFrequencyService.getWordFrequencyModifier("a", "pl"))
+          .thenReturn(90L);
 
       when(fibonacciService.getFibonacci(13)).thenReturn(233L);
       when(fibonacciService.getFibonacci(6)).thenReturn(8L);
@@ -384,8 +391,8 @@ class ScoreServiceTest {
     void shouldCalculateScoreForWordWithLengthLessThan5() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("cat"));
-      when(wordFrequencyService.getWordFrequency("cat", "pl"))
-          .thenReturn(new WordFrequencyDto("cat", "pl", 0.5));
+      when(wordFrequencyService.getWordFrequencyModifier("cat", "pl"))
+          .thenReturn(50L);
       when(fibonacciService.getFibonacci(3)).thenReturn(2L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -402,8 +409,8 @@ class ScoreServiceTest {
     void shouldCalculateScoreForWordWithLengthExactly5() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("house"));
-      when(wordFrequencyService.getWordFrequency("house", "pl"))
-          .thenReturn(new WordFrequencyDto("house", "pl", 0.3));
+      when(wordFrequencyService.getWordFrequencyModifier("house", "pl"))
+          .thenReturn(30L);
       when(fibonacciService.getFibonacci(5)).thenReturn(5L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -420,8 +427,8 @@ class ScoreServiceTest {
     void shouldCalculateScoreForWordWithLengthBetween5And10() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("computer"));
-      when(wordFrequencyService.getWordFrequency("computer", "pl"))
-          .thenReturn(new WordFrequencyDto("computer", "pl", 0.4));
+      when(wordFrequencyService.getWordFrequencyModifier("computer", "pl"))
+          .thenReturn(40L);
       when(fibonacciService.getFibonacci(8)).thenReturn(21L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -438,8 +445,8 @@ class ScoreServiceTest {
     void shouldCalculateScoreForWordWithLengthExactly10() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("strawberry"));
-      when(wordFrequencyService.getWordFrequency("strawberry", "pl"))
-          .thenReturn(new WordFrequencyDto("strawberry", "pl", 0.2));
+      when(wordFrequencyService.getWordFrequencyModifier("strawberry", "pl"))
+          .thenReturn(20L);
       when(fibonacciService.getFibonacci(10)).thenReturn(55L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -456,8 +463,8 @@ class ScoreServiceTest {
     void shouldCalculateScoreForWordWithLengthGreaterThan10() {
       long userId = 1L;
       when(wordsService.getWords(userId)).thenReturn(Set.of("encyclopedia"));
-      when(wordFrequencyService.getWordFrequency("encyclopedia", "pl"))
-          .thenReturn(new WordFrequencyDto("encyclopedia", "pl", 0.15));
+      when(wordFrequencyService.getWordFrequencyModifier("encyclopedia", "pl"))
+          .thenReturn(55L);
       when(fibonacciService.getFibonacci(12)).thenReturn(144L);
 
       long result = scoreService.calculateUserScore(userId);
@@ -477,14 +484,14 @@ class ScoreServiceTest {
       when(wordsService.getWords(userId)).thenReturn(
           new HashSet<>(Arrays.asList("cat", "house", "computer", "encyclopedia"))
       );
-      when(wordFrequencyService.getWordFrequency("cat", "pl"))
-          .thenReturn(new WordFrequencyDto("cat", "pl", 0.1));
-      when(wordFrequencyService.getWordFrequency("house", "pl"))
-          .thenReturn(new WordFrequencyDto("house", "pl", 0.1));
-      when(wordFrequencyService.getWordFrequency("computer", "pl"))
-          .thenReturn(new WordFrequencyDto("computer", "pl", 0.1));
-      when(wordFrequencyService.getWordFrequency("encyclopedia", "pl"))
-          .thenReturn(new WordFrequencyDto("encyclopedia", "pl", 0.1));
+      when(wordFrequencyService.getWordFrequencyModifier("cat", "pl"))
+          .thenReturn(10L);
+      when(wordFrequencyService.getWordFrequencyModifier("house", "pl"))
+          .thenReturn(10L);
+      when(wordFrequencyService.getWordFrequencyModifier("computer", "pl"))
+          .thenReturn(10L);
+      when(wordFrequencyService.getWordFrequencyModifier("encyclopedia", "pl"))
+          .thenReturn(10L);
 
       when(fibonacciService.getFibonacci(3)).thenReturn(2L);
       when(fibonacciService.getFibonacci(5)).thenReturn(5L);
@@ -500,18 +507,5 @@ class ScoreServiceTest {
       // Total: 4320 + 420 + 50 + 20 = 4810
       assertEquals(4810L, result);
     }
-  }
-
-  // Helper methods to invoke private methods using reflection
-  private Long invokeCalculateFrequencyModifier(Double frequency) throws Exception {
-    Method method = ScoreService.class.getDeclaredMethod("calculateFrequencyModifier", Double.class);
-    method.setAccessible(true);
-    return (Long) method.invoke(scoreService, frequency);
-  }
-
-  private Long invokeCalculateWordScore(String word) throws Exception {
-    Method method = ScoreService.class.getDeclaredMethod("calculateWordScore", String.class);
-    method.setAccessible(true);
-    return (Long) method.invoke(scoreService, word);
   }
 }
