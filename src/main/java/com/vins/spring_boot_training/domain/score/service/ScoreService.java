@@ -11,7 +11,7 @@ import com.vins.spring_boot_training.domain.score.utils.BonusCalculator;
 import com.vins.spring_boot_training.domain.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.vins.spring_boot_training.domain.wordFrequency.service.WordFrequencyService;
+import com.vins.spring_boot_training.domain.word.service.WordFrequencyService;
 
 import java.util.List;
 import java.util.Map;

@@ -1,7 +1,7 @@
-package com.vins.spring_boot_training.domain.wordFrequency.service;
+package com.vins.spring_boot_training.domain.word.service;
 
 import com.vins.spring_boot_training.config.Properties;
-import com.vins.spring_boot_training.domain.wordFrequency.dto.WordFrequencyDto;
+import com.vins.spring_boot_training.domain.word.dto.WordFrequencyDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;

@@ -1,4 +1,4 @@
-package com.vins.spring_boot_training.domain.wordFrequency.dto;
+package com.vins.spring_boot_training.domain.word.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

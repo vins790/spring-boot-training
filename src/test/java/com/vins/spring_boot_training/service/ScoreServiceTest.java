@@ -12,7 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import com.vins.spring_boot_training.domain.wordFrequency.service.WordFrequencyService;
+import com.vins.spring_boot_training.domain.word.service.WordFrequencyService;
 
 import java.util.Arrays;
 import java.util.HashSet;
