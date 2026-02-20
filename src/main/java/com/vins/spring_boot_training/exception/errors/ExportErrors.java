@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 
 public enum ExportErrors implements CustomError {
 
-  EXPORT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "User already exists!"),
+  EXPORT_ERROR(HttpStatus.INTERNAL_SERVER_ERROR, "Export error!"),
   UNSUPPORTED_FORMAT(HttpStatus.INTERNAL_SERVER_ERROR, "Format is not supported!");
 
   @Getter

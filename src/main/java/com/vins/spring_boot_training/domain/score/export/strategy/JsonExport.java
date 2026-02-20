@@ -1,28 +1,24 @@
 package com.vins.spring_boot_training.domain.score.export.strategy;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.vins.spring_boot_training.domain.score.dto.ScoreDto;
 import com.vins.spring_boot_training.domain.score.export.FileExportStrategy;
 import com.vins.spring_boot_training.exception.CustomException;
 import com.vins.spring_boot_training.exception.errors.ExportErrors;
-import org.springframework.stereotype.Component;
-
 import java.util.List;
 
-@Component
-public class JsonExpot implements FileExportStrategy {
+public class JsonExport<T> implements FileExportStrategy<T> {
 
   private final ObjectMapper objectMapper;
 
-  public JsonExpot() {
+  public JsonExport() {
     this.objectMapper = new ObjectMapper();
     this.objectMapper.findAndRegisterModules();
   }
 
   @Override
-  public byte[] export(List<ScoreDto> leaderboard) {
+  public byte[] export(List<T> items) {
     try {
-      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(leaderboard);
+      return objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(items);
     } catch (Exception e) {
       throw new CustomException(ExportErrors.EXPORT_ERROR);
     }

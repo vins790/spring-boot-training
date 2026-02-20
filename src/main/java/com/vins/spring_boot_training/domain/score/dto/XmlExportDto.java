@@ -15,9 +15,9 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @JacksonXmlRootElement(localName = "leaderboard")
-public class XmlExportDto {
+public class XmlExportDto<T> {
 
   @JacksonXmlElementWrapper(useWrapping = false)
   @JacksonXmlProperty(localName = "score")
-  private List<ScoreDto> scores;
+  private List<T> items;
 }
