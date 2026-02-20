@@ -1,5 +1,6 @@
 package com.vins.spring_boot_training.security.config;
 
+import com.vins.spring_boot_training.domain.user.enums.UserRole;
 import lombok.Getter;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -52,9 +53,16 @@ public class SecurityConfig {
   public SecurityFilterChain filterChain(HttpSecurity http, JwtAuthenticationFilter jwtAuthenticationFilter) {
     http.authorizeHttpRequests(configurer ->
         configurer
-            .requestMatchers("/api/auth/**", "/docs/**", "/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**",
+            .requestMatchers(
+                "/api/auth/**",
+                "/docs/**",
+                "/swagger-ui/**",
+                "/swagger-ui.html",
+                "/v3/api-docs/**",
                 "/webjars/**",
-                "/swagger-resources/**").permitAll()
+                "/swagger-resources/**"
+            ).permitAll()
+            .requestMatchers("/api/admin/**").hasAuthority(UserRole.ADMIN.getAuthority())
             .anyRequest().authenticated()
     );
 

@@ -1,10 +1,12 @@
 package com.vins.spring_boot_training.security.service;
 
+import com.vins.spring_boot_training.domain.user.enums.UserRole;
 import com.vins.spring_boot_training.security.config.SecurityConfig;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +28,8 @@ public class JwtService {
     return extractClaim(token, Claims::getSubject);
   }
 
+  public String extractExpiration(String token) { return extractClaim(token, claims -> claims.get("role", String.class)); }
+
   public boolean isTokenValid(String token, UserDetails userDetails) {
     final String username = extractUsername(token);
     isTokenExpired(token);
@@ -33,6 +37,7 @@ public class JwtService {
   }
 
   public String generateToken(Map<String, Object> claims, UserDetails userDetails) {
+    claims.put("role", extractRoleFromUserDetails(userDetails));
     return Jwts.builder()
         .claims(claims)
         .subject(userDetails.getUsername())
@@ -62,5 +67,12 @@ public class JwtService {
   private <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {
     final Claims claims = extractAllClaims(token);
     return claimsResolver.apply(claims);
+  }
+
+  private String extractRoleFromUserDetails(UserDetails userDetails) {
+    return userDetails.getAuthorities().stream()
+        .findFirst()
+        .map(GrantedAuthority::getAuthority)
+        .orElse(UserRole.USER.getAuthority());
   }
 }
