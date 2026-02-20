@@ -1,6 +1,9 @@
 package com.vins.spring_boot_training.service;
 
 import com.vins.spring_boot_training.config.Properties;
+import com.vins.spring_boot_training.domain.fibonacci.FibonacciService;
+import com.vins.spring_boot_training.domain.score.service.ScoreService;
+import com.vins.spring_boot_training.domain.word.service.WordService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -9,6 +12,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import com.vins.spring_boot_training.domain.word.service.WordFrequencyService;
 
 import java.util.Arrays;
 import java.util.HashSet;
@@ -22,7 +26,7 @@ import static org.mockito.Mockito.*;
 class ScoreServiceTest {
 
   @Mock
-  private WordsService wordsService;
+  private WordService wordService;
 
   @Mock
   private WordFrequencyService wordFrequencyService;
@@ -221,7 +225,7 @@ class ScoreServiceTest {
     @DisplayName("Should return 0 for user with no words")
     void shouldReturn0ForUserWithNoWords() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of());
+      when(wordService.getWords(userId)).thenReturn(Set.of());
 
       long result = scoreService.calculateUserScore(userId);
 
@@ -232,7 +236,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate score for user with one word")
     void shouldCalculateScoreForUserWithOneWord() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("test"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("test"));
       when(wordFrequencyService.getWordFrequencyModifier("test", "pl"))
           .thenReturn(10L);
       when(fibonacciService.getFibonacci(4)).thenReturn(3L);
@@ -250,7 +254,7 @@ class ScoreServiceTest {
     @DisplayName("Should apply bonus for word with length > 5")
     void shouldApplyBonusForWordLengthGreaterThan5() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("longer"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("longer"));
       when(wordFrequencyService.getWordFrequencyModifier("longer", "pl"))
           .thenReturn(10L);
       when(fibonacciService.getFibonacci(6)).thenReturn(8L);
@@ -268,7 +272,7 @@ class ScoreServiceTest {
     @DisplayName("Should apply bonus for word with length > 10")
     void shouldApplyBonusForWordLengthGreaterThan10() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("extraordinary"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("extraordinary"));
       when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
           .thenReturn(10L);
       when(fibonacciService.getFibonacci(13)).thenReturn(233L);
@@ -286,7 +290,7 @@ class ScoreServiceTest {
     @DisplayName("Should apply bonus only once for length > 10")
     void shouldApplyBonusOnlyOnceForLengthGreaterThan10() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(
+      when(wordService.getWords(userId)).thenReturn(
           Set.of("extraordinary", "unbelievable")
       );
       when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
@@ -316,7 +320,7 @@ class ScoreServiceTest {
     @DisplayName("Should apply bonus only once for length > 5")
     void shouldApplyBonusOnlyOnceForLengthGreaterThan5() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(
+      when(wordService.getWords(userId)).thenReturn(
           Set.of("longer", "second")
       );
       when(wordFrequencyService.getWordFrequencyModifier("longer", "pl"))
@@ -337,7 +341,7 @@ class ScoreServiceTest {
     @DisplayName("Should skip words with zero score")
     void shouldSkipWordsWithZeroScore() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(
+      when(wordService.getWords(userId)).thenReturn(
           Set.of("valid", "zero")
       );
       when(wordFrequencyService.getWordFrequencyModifier("valid", "pl"))
@@ -359,7 +363,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate complex score with multiple words and bonuses")
     void shouldCalculateComplexScoreWithMultipleWordsAndBonuses() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(
+      when(wordService.getWords(userId)).thenReturn(
           new HashSet<>(Arrays.asList("extraordinary", "longer", "test", "a"))
       );
       when(wordFrequencyService.getWordFrequencyModifier("extraordinary", "pl"))
@@ -390,7 +394,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate score for word with length < 5 (no bonus)")
     void shouldCalculateScoreForWordWithLengthLessThan5() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("cat"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("cat"));
       when(wordFrequencyService.getWordFrequencyModifier("cat", "pl"))
           .thenReturn(50L);
       when(fibonacciService.getFibonacci(3)).thenReturn(2L);
@@ -408,7 +412,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate score for word with length exactly 5 (no bonus)")
     void shouldCalculateScoreForWordWithLengthExactly5() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("house"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("house"));
       when(wordFrequencyService.getWordFrequencyModifier("house", "pl"))
           .thenReturn(30L);
       when(fibonacciService.getFibonacci(5)).thenReturn(5L);
@@ -426,7 +430,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate score for word with length between 5 and 10 (bonus x2)")
     void shouldCalculateScoreForWordWithLengthBetween5And10() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("computer"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("computer"));
       when(wordFrequencyService.getWordFrequencyModifier("computer", "pl"))
           .thenReturn(40L);
       when(fibonacciService.getFibonacci(8)).thenReturn(21L);
@@ -444,7 +448,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate score for word with length exactly 10 (bonus x2)")
     void shouldCalculateScoreForWordWithLengthExactly10() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("strawberry"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("strawberry"));
       when(wordFrequencyService.getWordFrequencyModifier("strawberry", "pl"))
           .thenReturn(20L);
       when(fibonacciService.getFibonacci(10)).thenReturn(55L);
@@ -462,7 +466,7 @@ class ScoreServiceTest {
     @DisplayName("Should calculate score for word with length > 10 (bonus x3)")
     void shouldCalculateScoreForWordWithLengthGreaterThan10() {
       long userId = 1L;
-      when(wordsService.getWords(userId)).thenReturn(Set.of("encyclopedia"));
+      when(wordService.getWords(userId)).thenReturn(Set.of("encyclopedia"));
       when(wordFrequencyService.getWordFrequencyModifier("encyclopedia", "pl"))
           .thenReturn(55L);
       when(fibonacciService.getFibonacci(12)).thenReturn(144L);
@@ -481,7 +485,7 @@ class ScoreServiceTest {
     void shouldHandleMultipleWordsWithDifferentLengthsCorrectly() {
       long userId = 1L;
       // cat (3), house (5), computer (8), encyclopedia (12)
-      when(wordsService.getWords(userId)).thenReturn(
+      when(wordService.getWords(userId)).thenReturn(
           new HashSet<>(Arrays.asList("cat", "house", "computer", "encyclopedia"))
       );
       when(wordFrequencyService.getWordFrequencyModifier("cat", "pl"))
