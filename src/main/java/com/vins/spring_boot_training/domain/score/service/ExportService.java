@@ -6,6 +6,7 @@ import com.vins.spring_boot_training.domain.score.export.ExportStrategyFactory;
 import com.vins.spring_boot_training.domain.score.export.FileExportStrategy;
 import com.vins.spring_boot_training.exception.CustomException;
 import com.vins.spring_boot_training.exception.errors.ExportErrors;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -16,7 +17,7 @@ public class ExportService {
 
   private final ScoreService scoreService;
 
-  public ExportService(ScoreService scoreService) {
+  public ExportService(@Lazy ScoreService scoreService) {
     this.scoreService = scoreService;
   }
 

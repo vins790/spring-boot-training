@@ -62,7 +62,10 @@ public class SecurityConfig {
                 "/webjars/**",
                 "/swagger-resources/**"
             ).permitAll()
-            .requestMatchers("/api/admin/**").hasAuthority(UserRole.ADMIN.getAuthority())
+            .requestMatchers(
+                "/api/admin/**",
+                "/api/archive/**"
+            ).hasAuthority(UserRole.ADMIN.getAuthority())
             .anyRequest().authenticated()
     );
 

@@ -65,7 +65,7 @@ public class ScoreService {
 
   public long calculateUserScore(long userId) {
     BonusCalculator bonusCalculator = new BonusCalculator();
-    Set<String> words = wordService.getWords(userId);
+    Set<String> words = wordService.getScoringWords(userId);
     Map<String, Long> wordScores = words.stream()
         .collect(Collectors.toMap(
             word -> word,
@@ -91,6 +91,17 @@ public class ScoreService {
         .limit(size)
         .map(score -> new ScoreDto(score.getUserId(), score.getScore()))
         .collect(Collectors.toList());
+  }
+
+  public List<ScoreDto> getLeaderboard() {
+    return scoreRepository.findAll().stream()
+        .sorted((s1, s2) -> Long.compare(s2.getScore(), s1.getScore()))
+        .map(score -> new ScoreDto(score.getUserId(), score.getScore()))
+        .collect(Collectors.toList());
+  }
+
+  public void dropLeaderboard() {
+    scoreRepository.deleteAll();
   }
 
   public void scoreCalculation() {
