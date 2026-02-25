@@ -59,6 +59,12 @@ public class UserService implements UserDetailsService {
     return getUserByUserDetails(userDetails).getId();
   }
 
+  public User getUserByUserId(Long userId) throws CustomException {
+    return userRepository
+        .findById(userId)
+        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME));
+  }
+
   public Set<User> getAllUsers() {
     return new HashSet<>(userRepository.findAll());
   }

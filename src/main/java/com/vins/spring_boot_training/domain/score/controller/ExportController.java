@@ -1,6 +1,6 @@
 package com.vins.spring_boot_training.domain.score.controller;
 
-import com.vins.spring_boot_training.domain.score.service.WorkbookService;
+import com.vins.spring_boot_training.domain.score.service.ScoreWorkbookService;
 import com.vins.spring_boot_training.domain.score.utils.ExportResponse;
 import com.vins.spring_boot_training.domain.score.export.ExportFormat;
 import com.vins.spring_boot_training.domain.score.service.ExportService;
@@ -20,7 +20,7 @@ public class ExportController {
 
   private final ExportService exportService;
   private final FileName fileNameGenerator;
-  private final WorkbookService workbookService;
+  private final ScoreWorkbookService scoreWorkbookService;
 
   @GetMapping("/leaderboard/json/{size}")
   public ResponseEntity<byte[]> exportLeaderboardJson(@PathVariable Long size) {
@@ -43,17 +43,24 @@ public class ExportController {
     return ExportResponse.build(data, fileName, MediaType.parseMediaType("text/csv"));
   }
 
-  @GetMapping("/leaderboard/csv/percentage")
-  public ResponseEntity<byte[]> exportLeaderboardWithPercentageCsv() {
-    byte[] data = workbookService.getUserScoresWithPercentageWorkbook();
-    String fileName = "test.xlsx";
+  @GetMapping("/leaderboard/xlsx/percentage")
+  public ResponseEntity<byte[]> exportLeaderboardWithPercentage() {
+    byte[] data = scoreWorkbookService.getUserScoresWithPercentage();
+    String fileName = fileNameGenerator.leaderboard(ExportFormat.XLSX);
     return ExportResponse.build(data, fileName, MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
   }
 
-  @GetMapping("/leaderboard/csv/position")
-  public ResponseEntity<byte[]> exportLeaderboardWithPositonCsv() {
-    byte[] data = workbookService.getUserScoresWithLeaderboardPosition();
-    String fileName = "test.xlsx";
+  @GetMapping("/leaderboard/xlsx/position")
+  public ResponseEntity<byte[]> exportLeaderboardWithPositon() {
+    byte[] data = scoreWorkbookService.getUserScoresWithRank();
+    String fileName = fileNameGenerator.leaderboard(ExportFormat.XLSX);
+    return ExportResponse.build(data, fileName, MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+  }
+
+  @GetMapping("/leaderboard/xlsx/complete")
+  public ResponseEntity<byte[]> exportCompleteLeaderboard() {
+    byte[] data = scoreWorkbookService.getCompleteUserScores();
+    String fileName = fileNameGenerator.leaderboard(ExportFormat.XLSX);
     return ExportResponse.build(data, fileName, MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
   }
 }

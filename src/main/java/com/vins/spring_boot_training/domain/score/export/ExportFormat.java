@@ -8,7 +8,8 @@ import lombok.Getter;
 public enum ExportFormat {
   CSV("csv"),
   JSON("json"),
-  XML("xml");
+  XML("xml"),
+  XLSX("xlsx");
 
   private final String extension;
 }
