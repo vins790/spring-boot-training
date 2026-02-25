@@ -4,6 +4,6 @@ import com.vins.spring_boot_training.domain.score.dto.ScoreDto;
 
 import java.util.List;
 
-public interface  FileExportStrategy<T> {
-  byte[] export(List<T> leaderboard);
+public interface FileExportStrategy<T> {
+  byte[] export(List<T> data);
 }

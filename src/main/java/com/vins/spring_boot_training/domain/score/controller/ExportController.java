@@ -1,5 +1,6 @@
 package com.vins.spring_boot_training.domain.score.controller;
 
+import com.vins.spring_boot_training.domain.score.service.WorkbookService;
 import com.vins.spring_boot_training.domain.score.utils.ExportResponse;
 import com.vins.spring_boot_training.domain.score.export.ExportFormat;
 import com.vins.spring_boot_training.domain.score.service.ExportService;
@@ -19,6 +20,7 @@ public class ExportController {
 
   private final ExportService exportService;
   private final FileName fileNameGenerator;
+  private final WorkbookService workbookService;
 
   @GetMapping("/leaderboard/json/{size}")
   public ResponseEntity<byte[]> exportLeaderboardJson(@PathVariable Long size) {
@@ -39,5 +41,19 @@ public class ExportController {
     byte[] data = exportService.exportLeaderboard(ExportFormat.CSV, size);
     String fileName = fileNameGenerator.leaderboard(ExportFormat.CSV);
     return ExportResponse.build(data, fileName, MediaType.parseMediaType("text/csv"));
+  }
+
+  @GetMapping("/leaderboard/csv/percentage")
+  public ResponseEntity<byte[]> exportLeaderboardWithPercentageCsv() {
+    byte[] data = workbookService.getUserScoresWithPercentageWorkbook();
+    String fileName = "test.xlsx";
+    return ExportResponse.build(data, fileName, MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
+  }
+
+  @GetMapping("/leaderboard/csv/position")
+  public ResponseEntity<byte[]> exportLeaderboardWithPositonCsv() {
+    byte[] data = workbookService.getUserScoresWithLeaderboardPosition();
+    String fileName = "test.xlsx";
+    return ExportResponse.build(data, fileName, MediaType.parseMediaType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"));
   }
 }
