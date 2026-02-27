@@ -13,7 +13,18 @@
   align-items: center;
 }
 
-.input-group { display: flex; gap: 0.5em; }
+.input-group {
+  display: flex;
+  gap: 0.5em;
+}
+
+.input-group--vertical {
+  flex-direction: column;
+}
+
+.login-button {
+  margin-top: 1rem;
+}
 
 .input-group input { border-radius: 8px; padding: 0 8px; }
 

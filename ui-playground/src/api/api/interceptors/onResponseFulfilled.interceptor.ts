@@ -1,0 +1,1 @@
+export const onResponseFulfilledInterceptorFactory = () => <T>(response: T) => response;

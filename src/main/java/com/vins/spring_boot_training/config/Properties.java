@@ -19,6 +19,4 @@ public class Properties {
 
   @Value("${word.lang:pl}")
   private String wordLanguage;
-
-
 }

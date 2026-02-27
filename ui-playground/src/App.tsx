@@ -1,39 +1,31 @@
-import {useRef, useState} from 'react'
 import './App.css'
-import {FibonacciService} from "./service/fibonacci.service.ts";
+import {useApiClientProviderHook} from "./api/api/hooks/useApiClientProvider.hook.tsx";
+import {Fibonacci} from "./feature/fibonacci/Fibonacci.tsx";
+import {BrowserRouter, Route, Routes, Navigate} from "react-router-dom";
+import {Login} from "./feature/authorization/Login.tsx";
+import {ProtectedRoute} from "./feature/authorization/ProtectedRoute.tsx";
+import {useAuthMonitor} from "./feature/authorization/hooks/useAuthMonitor.tsx";
 
 function App() {
-    const inputRef = useRef<HTMLInputElement>(null);
-    const [fibValue, setFibValue] = useState<number | null>(null);
-    const [fibN, setFibN] = useState<number | null>(null);
+  const { ApiClientProvider } = useApiClientProviderHook();
+  const { isAuthenticated } = useAuthMonitor();
 
-    const getFibonacci = async () => {
-        const n = Number(inputRef?.current?.value);
-        setFibN(n);
-        if(Number.isNaN(n)) {
-            setFibValue(null);
-            return;
-        }
-
-        const result = await FibonacciService.getNth(n);
-        setFibValue(result);
-    }
-
-    return (
-        <>
-            <div className="card">
-                <h1>Fibonacci Calculator</h1>
-                <div className="input-group">
-                    <input ref={inputRef}/>
-                    <button onClick={getFibonacci}>
-                        Get Fibonacci
-                    </button>
-                </div>
-                {Number.isFinite(fibValue) && Number.isFinite(fibN) && <p>{`Fib(${fibN}) = ${fibValue}`}</p>}
-            </div>
-
-        </>
-    )
+  return (
+    <ApiClientProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login/>}/>
+          <Route path="/fib" element={
+            <ProtectedRoute isAuthenticated={isAuthenticated}>
+              <Fibonacci/>
+            </ProtectedRoute>
+          }/>
+          <Route path="/" element={<Navigate to="/login" replace />}/>
+          <Route path="*" element={<Navigate to="/login" replace />}/>
+        </Routes>
+      </BrowserRouter>
+    </ApiClientProvider>
+  )
 }
 
 export default App

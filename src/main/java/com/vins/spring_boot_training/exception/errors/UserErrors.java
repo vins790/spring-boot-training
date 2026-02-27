@@ -9,7 +9,8 @@ public enum UserErrors implements CustomError {
   USER_INVALID_USERNAME(HttpStatus.BAD_REQUEST, "Invalid username"),
   USER_INVALID_PASSWORD(HttpStatus.BAD_REQUEST, "Invalid password"),
   USER_UNAUTHORIZED(HttpStatus.UNAUTHORIZED, "Unauthorized user"),
-  USER_ROLE_ALREADY_ADDED(HttpStatus.BAD_REQUEST, "User already has this role");
+  USER_ROLE_ALREADY_ADDED(HttpStatus.BAD_REQUEST, "User already has this role"),
+  INVALID_TOKEN(HttpStatus.UNAUTHORIZED, "Invalid token");
 
 
   @Getter
@@ -21,5 +22,4 @@ public enum UserErrors implements CustomError {
     this.httpStatus = httpStatus;
     this.errorMessage = errorMessage;
   }
-
 }
