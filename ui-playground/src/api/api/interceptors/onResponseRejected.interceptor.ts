@@ -41,6 +41,12 @@ export const onResponseRejectedInterceptorFactory = (http: AxiosInstance) => {
 
           queue.forEach((cb) => cb(newToken));
           queue = [];
+
+          if (original.headers) {
+            original.headers.Authorization = `Bearer ${newToken}`;
+          }
+          return http(original);
+
         } catch (refreshError) {
           queue = [];
           sessionStorage.removeItem("access_token");

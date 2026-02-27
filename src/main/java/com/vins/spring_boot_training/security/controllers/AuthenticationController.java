@@ -34,7 +34,7 @@ public class AuthenticationController {
   @ResponseStatus(HttpStatus.OK)
   public ResponseEntity<TokenDto> login(@Valid @RequestBody UserCredentialsDto credentials) {
     TokenSetDto tokenSet = authenticationService.login(credentials);
-    ResponseCookie cookie =jwtService.generateRefreshTokenCookie(tokenSet.getRefreshToken());
+    ResponseCookie cookie = jwtService.generateRefreshTokenCookie(tokenSet.getRefreshToken());
 
     return ResponseEntity.ok()
         .header(HttpHeaders.SET_COOKIE, cookie.toString())
