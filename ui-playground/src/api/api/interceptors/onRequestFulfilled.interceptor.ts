@@ -4,6 +4,7 @@ export const onRequestFulfilledInterceptorFactory =
   () => (config: InternalAxiosRequestConfig) => {
     if (config.url?.includes('/auth/')) return config;
     const token = sessionStorage.getItem("access_token");
+    (config as { accessToken?: string | null }).accessToken = token;
     if (token) config.headers.Authorization = `Bearer ${token}`;
     return config;
   }

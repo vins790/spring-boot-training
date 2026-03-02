@@ -1,9 +1,9 @@
 import {createApiClient} from "../apiClient.ts";
 import { ApiClientContext } from "../context/apiClient.context.tsx";
-import type {PropsWithChildren} from "react";
+import {type PropsWithChildren, useMemo} from "react";
 
 export const useApiClientProviderHook = () => {
-  const apiClient = createApiClient();
+  const apiClient = useMemo(() => createApiClient(), [])
   return {
     ApiClientProvider: ({children}: PropsWithChildren) =>
       <ApiClientContext.Provider value={apiClient}>
