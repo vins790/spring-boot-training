@@ -3,16 +3,16 @@ import type { RetryConfig } from "../types/RetryConfig.type.ts";
 
 let refreshPromise: Promise<void> | null = null;
 
-const createRefreshToken = (http: AxiosInstance) => async (): Promise<string> => {
-    const { data: { token } } = await http.post("/auth/refresh", {}, {
+const createRefreshToken = (apiClient: AxiosInstance) => async (): Promise<string> => {
+    const { data: { token } } = await apiClient.post("/auth/refresh", {}, {
       refreshLoopGuard: true,
       headers: { Authorization: undefined }
     } as RetryConfig);
    return token;
  }
 
-export const refreshUtils = (http: AxiosInstance, refreshToken?: () => Promise<string>) => {
-  const refreshTokenFn = refreshToken || createRefreshToken(http);
+export const refreshUtils = (apiClient: AxiosInstance, refreshToken?: () => Promise<string>) => {
+  const refreshTokenFn = refreshToken || createRefreshToken(apiClient);
 
   const saveToken = (token: string) => {
     sessionStorage.setItem("access_token", token);
@@ -48,7 +48,7 @@ export const refreshUtils = (http: AxiosInstance, refreshToken?: () => Promise<s
 
   const retryRequest = (config: RetryConfig) => {
     config.retry = true;
-    return http(config);
+    return apiClient(config);
   }
 
   const handleUnauthorized = async (config: RetryConfig): Promise<unknown> => {
