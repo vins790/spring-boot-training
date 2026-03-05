@@ -1,11 +1,11 @@
-export class FibonacciService {
-    private static readonly baseUrl = 'http://localhost:8080/api/fib'
+import {useApiClient} from "../api/api/hooks/useApiClient.hook.ts";
 
-    static async getNth(index: number): Promise<number> {
-        const response = await fetch(`${FibonacciService.baseUrl}/${index}`);
-        if (!response.ok) {
-            throw new Error(`Error fetching Fibonacci value: ${response.statusText}`);
-        }
-        return response.json();
+export const useFibonacciService = () => {
+  const apiClient = useApiClient();
+
+  return {
+    getNth: async (index: number) => {
+      return apiClient.get<number>(`/fib/${index}`);
     }
+  }
 }

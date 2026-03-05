@@ -1,0 +1,1 @@
+export const onRequestRejectedInterceptorFactory = () => (error: { message: string }) => Promise.reject(error)

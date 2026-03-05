@@ -14,7 +14,7 @@ public class CustomExceptionHandler {
 
   @ExceptionHandler
   public ResponseEntity<ErrorResponse> handleException(CustomException e) {
-    log.info("[LOG INFO] " + e.getMessage());
+    log.info(e.getMessage());
     ErrorResponse errorResponse = new ErrorResponse(
         e.getCustomError().getErrorMessage(),
         System.currentTimeMillis()
@@ -24,7 +24,7 @@ public class CustomExceptionHandler {
 
   @ExceptionHandler
   public ResponseEntity<ErrorResponse> handleException(Exception e) {
-    log.info("[LOG INFO] " + e.getMessage());
+    log.info(e.getMessage());
     ErrorResponse errorResponse = new ErrorResponse(
         "Error occurred while processing the request",
         System.currentTimeMillis()

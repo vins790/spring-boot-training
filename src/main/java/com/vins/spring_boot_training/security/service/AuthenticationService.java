@@ -1,15 +1,17 @@
 package com.vins.spring_boot_training.security.service;
 
+import com.vins.spring_boot_training.security.dto.TokenDto;
+import com.vins.spring_boot_training.security.dto.TokenSetDto;
 import com.vins.spring_boot_training.security.dto.UserCredentialsDto;
 import com.vins.spring_boot_training.domain.user.entity.User;
 import com.vins.spring_boot_training.exception.CustomException;
 import com.vins.spring_boot_training.exception.errors.UserErrors;
 import com.vins.spring_boot_training.domain.user.repository.UsersRepository;
-import com.vins.spring_boot_training.security.dto.TokenDto;
 import com.vins.spring_boot_training.domain.user.service.UserService;
 import lombok.AllArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -36,13 +38,27 @@ public class AuthenticationService {
     userRepository.save(newUser);
   }
 
-  public TokenDto login(UserCredentialsDto credentials) throws CustomException {
+  public TokenSetDto login(UserCredentialsDto credentials) throws CustomException {
     authenticationManager.authenticate(
         new UsernamePasswordAuthenticationToken(credentials.getUsername(), credentials.getPassword())
     );
     UserDetails user = userService.loadUserByUsername(credentials.getUsername());
-    String jwtToken = jwtService.generateToken(new HashMap<>(), user);
+    return jwtService.generateTokenSet(user);
+  }
 
-    return new TokenDto(jwtToken);
+  public TokenDto refresh(String refreshToken) throws CustomException {
+    if (refreshToken == null || refreshToken.isEmpty()) {
+      throw new CustomException(UserErrors.INVALID_TOKEN);
+    }
+
+    String username = jwtService.extractUsername(refreshToken);
+    UserDetails userDetails = userService.loadUserByUsername(username);
+
+    if (!jwtService.isTokenValid(refreshToken, userDetails)) {
+      throw new CustomException(UserErrors.INVALID_TOKEN);
+    }
+
+    String newAccessToken = jwtService.generateAccessToken(userDetails);
+    return new TokenDto(newAccessToken);
   }
 }

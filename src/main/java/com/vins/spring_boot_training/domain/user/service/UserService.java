@@ -49,11 +49,20 @@ public class UserService implements UserDetailsService {
             .collect(java.util.stream.Collectors.toSet()));
   }
 
-  public Long getIdByUserDetails(UserDetails userDetails) throws CustomException {
+  public User getUserByUserDetails(UserDetails userDetails) throws CustomException {
     return userRepository
         .findByUsername(userDetails.getUsername())
-        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME))
-        .getId();
+        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME));
+  }
+
+  public Long getIdByUserDetails(UserDetails userDetails) throws CustomException {
+    return getUserByUserDetails(userDetails).getId();
+  }
+
+  public User getUserByUserId(Long userId) throws CustomException {
+    return userRepository
+        .findById(userId)
+        .orElseThrow(() -> new CustomException(UserErrors.USER_INVALID_USERNAME));
   }
 
   public Set<User> getAllUsers() {

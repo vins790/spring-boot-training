@@ -1,5 +1,24 @@
 services:
+  mysql:
+    image: mysql:8.0
+    container_name: words-database
+    environment:
+      MYSQL_ROOT_PASSWORD: secret
+      MYSQL_DATABASE: wordsdb
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql-data:/var/lib/mysql
+    networks:
+      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uroot", "-psecret"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
   word-frequency-service:
+    container_name: words-frequency-service
     build:
       context: ./word-frequency-service
       dockerfile: Dockerfile
@@ -7,6 +26,9 @@ services:
       - "8001:8000"
     networks:
       - app-network
+
+volumes:
+  mysql-data:
 
 networks:
   app-network:
